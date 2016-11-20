@@ -23,6 +23,9 @@ int main(int argCount, char** argVector) {
 	double duration = 0.00;		// Total time of sort.
 	Algorithms algs;			// Algorithm object.
 
+	string sortParameter = atoi[1];
+	if(sortParameter == NULL) {fprintf(stderr, "must define a sorting algorithm to use\n"); exit(-1);}
+
 	// Seed random number generator with real time.
 	srand(unsigned(time(NULL)));
 
