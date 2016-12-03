@@ -8,9 +8,12 @@
 #include <iomanip>
 #include <ctime>
 #include <cstdlib>
+#include <omp.h>
+#include <vector>
 
-
+typedef std::vector<long> mergeSortVector; // Vector for merge sort
 int getRandom(int min, const int max);
+
 int main(int argCount, char** argVector) {
 	const int SIZE = 1000;		// Size of array.
 	const int COUNT = 5000;		// Number of times to sort data.
@@ -22,9 +25,12 @@ int main(int argCount, char** argVector) {
 	clock_t oTime = 0;			// Overhead timer.
 	double duration = 0.00;		// Total time of sort.
 	Algorithms algs;			// Algorithm object.
+	omp_set_nested(1);			// Number of nested omp sections
 
 	string sortParameter = atoi[1];
 	if(sortParameter == NULL) {fprintf(stderr, "must define a sorting algorithm to use\n"); exit(-1);}
+	int thread_count = atoi(argv[2]);
+ 	if (frames < 1) {fprintf(stderr, "error: thread_count must be at least 1\n"); exit(-1);}
 
 	// Seed random number generator with real time.
 	srand(unsigned(time(NULL)));
