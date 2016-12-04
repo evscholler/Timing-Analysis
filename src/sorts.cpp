@@ -104,3 +104,34 @@ vector<long> Algorithms::mergeSort(vector<long>& vec, int threads) {
     return merge(left, right);
 }
 
+void Algorithms::oddEvenSort(int array[], int thread_count, int size) {
+	
+	int i, phase, temp;
+
+#	pragma omp parallel num_threads(thread_count) \
+		default(none) shared(array, size) private(i, temp, phase)
+		for (phase = 0; phase < size; phase++) {
+			if (phase % 2 == 0) 
+#				pragma omp for
+				for (i = 1; i < size; i += 2) {
+					if (array[i-1] > array[i]) {
+						temp = array[i-1];
+						array[i-1] = array[i];
+						array[i] = temp;
+					}
+				}
+			else
+#				pragma omp for 
+				for (i = 1; i < size-1; i += 2) {
+					if (array[i] > array[i+1]) {
+						temp = array[i+1];
+						array[i+1] = array[i];
+						array[i] = temp;
+					}
+				}
+		}
+
+
+
+ }
+
