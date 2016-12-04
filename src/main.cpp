@@ -55,10 +55,25 @@ int main(int argCount, char** argVector) {
 		count = COUNT;
 
 		// Populate test array
-		while (count--) {
-			for (int i = 0; i < size; i++)
-				test[i] = data[i];
-			algs.insertionSort(test, size);
+		switch(sortParameter) {
+			case 'i' || 'I':
+				//while (count--) {
+					//for (int i = 0; i < size; i++)
+						//test[i] = data[i];
+				algs.insertionSort(test, size);
+				break;
+
+			case 'b' || 'B':
+				algs.modifiedBubbleSort(test,size);
+				break;
+
+			case 'm' || 'M':
+				//need to populate vector usng the array
+				break;
+
+			case 'o' || 'O':
+				algs.oddEvenSort(test, thread_count, size);
+				break;
 		}
 
 		// Calculate time.

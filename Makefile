@@ -14,7 +14,7 @@ OBJS 		= $(SRCFILES:.cpp=.o)
 
 # ---- Compiler optiions ----
 CXX			= g++
-CFLAGS		= -g -Wall -I $(INCS)
+CFLAGS		= -g -Wall -I $(INCS) -fopenmp
 
 # ---- Clean-up macro ----
 RM			= rm -rf

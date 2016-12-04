@@ -130,8 +130,5 @@ void Algorithms::oddEvenSort(int array[], int thread_count, int size) {
 					}
 				}
 		}
-
-
-
- }
+}
 
