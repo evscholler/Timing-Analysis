@@ -9,9 +9,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <omp.h>
-#include <vector>
+#include <stdio.h>
 
-typedef std::vector<long> mergeSortVector; // Vector for merge sort
 int getRandom(int min, const int max);
 
 int main(int argCount, char** argVector) {
@@ -68,7 +67,7 @@ int main(int argCount, char** argVector) {
 				break;
 
 			case 'm' || 'M':
-				//need to populate vector usng the array
+				algs.mergeSort(test, thread_count, size, data);
 				break;
 
 			case 'o' || 'O':

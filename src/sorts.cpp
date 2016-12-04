@@ -38,70 +38,60 @@ void Algorithms::insertionSort(int array[], int size) {
 		}
 	}
 
-vector<long> Algorithms::merge(const vector<long>& left, const vector<long>& right) {
+void Algorithms::merge(int a[], int size, int temp[]) {
 
-	vector<long> result;
-    unsigned left_it = 0, right_it = 0;
- 
-    while(left_it < left.size() && right_it < right.size()) {
-		if(left[left_it] < right[right_it]) {
-            result.push_back(left[left_it]);
-            left_it++;
+	int i1 = 0;
+    int i2 = size/2;
+    int tempi = 0;
+    while (i1 < size/2 && i2 < size) {
+        if (a[i1] < a[i2]) {
+            temp[tempi] = a[i1];
+            i1++;
+        } else {
+            temp[tempi] = a[i2];
+            i2++;
         }
-        else {
-            result.push_back(right[right_it]);
-            right_it++;
-        }
+        tempi++;
     }
- 
-    // Push the remaining data from both vectors onto the resultant
-    while(left_it < left.size()) {
-        result.push_back(left[left_it]);
-        left_it++;
+    while (i1 < size/2) {
+        temp[tempi] = a[i1];
+        i1++;
+        tempi++;
     }
- 
-    while(right_it < right.size()) {
-        result.push_back(right[right_it]);
-        right_it++;
+    while (i2 < size) {
+        temp[tempi] = a[i2];
+        i2++;
+        tempi++;
     }
- 
-    return result;
+    // Copy sorted temp array into main array, a
+    memcpy(a, temp, size*sizeof(int));
 }
 
-vector<long> Algorithms::mergeSort(vector<long>& vec, int threads) {
+void Algorithms::mergeSort(int array[], int threads, int size, int temp[]) {
 	
-	// Termination condition: List is completely sorted if it
-    // only contains a single element.
-    if(vec.size() == 1) 
-    	return vec;
- 
- 	// Determine the location of the middle element in the vector
-    std::vector<long>::iterator middle = vec.begin() + (vec.size() / 2);
- 
-    vector<long> left(vec.begin(), middle);
-    vector<long> right(middle, vec.end());
- 
-    // Perform a merge sort on the two smaller vectors
- 
-    if (threads > 1) {
-      #pragma omp parallel sections
-      {
-        #pragma omp section
-        {
-          left = mergesort(left, threads/2);
-        }
-        #pragma omp section
-        {
-          right = mergesort(right, threads - threads/2);
-        }
-      }
-    } 
-    else {
-      left = mergesort(left, 1);
-      right = mergesort(right, 1);
+	if ( threads == 1) {
+//        printf("Thread %d begins serial merge sort\n", omp_get_thread_num());
+    	//mergesort_serial(a, size, temp);
+    } else if (threads > 1) {
+       #pragma omp parallel sections num_threads(2)
+       {
+//		        printf("Thread %d begins recursive section\n", omp_get_thread_num());
+			#pragma omp section
+		        { //printf("Thread %d begins recursive call\n", omp_get_thread_num());
+			mergesort_parallel_omp(a, size/2, temp, threads/2);}
+			#pragma omp section
+		        { //printf("Thread %d begins recursive call\n", omp_get_thread_num());
+			mergesort_parallel_omp(a + size/2, size - size/2, temp + size/2, threads - threads/2);}
+			// The above use of temp + size/2 is an essential change from the serial version	
+       }
+	   // Thread allocation is implementation dependent
+       // Some threads can execute multiple sections while others are idle 
+       // Merge the two sorted sub-arrays through temp
+       merge(a, size, temp); 
+    } else {
+       printf("Error: %d threads\n", threads); 
+       return;
     }
- 
-    return merge(left, right);
 }
 
 void Algorithms::oddEvenSort(int array[], int thread_count, int size) {
